@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Febi 💖 Valentine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#ff4e50,#f9d423);
+color:white;
+font-family:Arial;
+overflow:hidden;
+text-align:center;
+}
+.card{
+background:rgba(255,255,255,0.2);
+padding:30px;
+border-radius:20px;
+max-width:360px;
+backdrop-filter:blur(10px);
+}
+.glow{
+font-size:32px;
+font-weight:bold;
+animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+from{text-shadow:0 0 5px #fff,0 0 10px #ff4d6d;}
+to{text-shadow:0 0 15px #fff,0 0 30px #ff1744;}
+}
+button{
+background:#ff1744;
+border:none;
+padding:12px 22px;
+margin:10px;
+border-radius:25px;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+#noBtn{position:absolute;}
+.heart{
+position:absolute;
+bottom:-20px;
+animation:float 6s linear infinite;
+opacity:0.7;
+}
+@keyframes float{
+to{transform:translateY(-100vh);}
+}
+</style>
+</head>
+
+<body onclick="startMusic()">
+
+<audio id="music" loop>
+<source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Komiku/Its_time_for_adventure/Komiku_-_07_-_Battle_of_Pogs.mp3">
+</audio>
+
+<div class="card">
+<h1 class="glow">Hey Febi ❤️</h1>
+<p><span class="glow">Febi</span>, ente life-il oru special aaya nee…<br>
+Will you be my Valentine? 💝</p>
+
+<button onclick="yes()">Yes 😍</button>
+<button id="noBtn" onclick="no()">No 🙈</button>
+
+<p id="msg"></p>
+</div>
+
+<script>
+let n=0;
+function startMusic(){document.getElementById("music").play();}
+function yes(){
+document.getElementById("msg").innerText=
+"Febi, ninte YES ente jeevithathile best moment aanu 💕🌹";
+}
+function no(){
+n++;
+document.getElementById("msg").innerText=
+["Sure alle? 🥺","Onnu think cheyyu ❤️","Pleaseeee 💔","Escape illa 😏"][Math.min(n-1,3)];
+document.getElementById("noBtn").style.left=Math.random()*200+"px";
+document.getElementById("noBtn").style.top=Math.random()*200+"px";
+}
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerText="❤️";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
+},500);
+</script>
+
+</body>
+</html>
