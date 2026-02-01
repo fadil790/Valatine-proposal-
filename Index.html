@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Febi 💘</title>
+  <title>Febi, will you be my Valentine? 💘</title>
   <style>
     body {
       display: flex;
@@ -11,16 +11,29 @@
       align-items: center;
       height: 100vh;
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: #ffe6ea;
+      background-color: #ffe6ea;
       text-align: center;
       overflow: hidden;
       cursor: default;
+      transition: background 1s;
     }
-    h1 {
-      color: #e6005c;
-      font-size: 40px;
-      margin-bottom: 40px;
+
+    /* Rainbow bouncing heading */
+    #mainHeading {
+      font-size: 50px;
+      margin-bottom: 50px;
     }
+    #mainHeading span {
+      display: inline-block;
+      animation: bounce 1s infinite alternate;
+      font-weight: bold;
+    }
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-20px); }
+    }
+
+    /* Buttons */
     button {
       padding: 15px 30px;
       font-size: 20px;
@@ -41,6 +54,8 @@
       position: absolute;
       z-index: 2;
     }
+
+    /* Floating hearts */
     .heart {
       position: absolute;
       color: red;
@@ -52,11 +67,49 @@
       0% { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(-200px) scale(1.5); }
     }
+
+    /* Smooth background animation */
+    @keyframes smoothBg {
+      0% { background-color: #ffe6ea; }
+      25% { background-color: #ffb3c6; }
+      50% { background-color: #ff4d6d; }
+      75% { background-color: #ff80a0; }
+      100% { background-color: #ffe6ea; }
+    }
+    body.celebration {
+      animation: smoothBg 8s infinite alternate;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ff4d6d;
+      top: 0;
+      opacity: 0.8;
+      pointer-events: none;
+      animation: fall 3s linear forwards;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
-  <h1>Febi, will you be my Valentine? 💖</h1>
+  <!-- Rainbow heading -->
+  <h1 id="mainHeading">
+    <span>💖</span>
+    <span>F</span><span>e</span><span>b</span><span>i</span>,
+    <span>W</span><span>i</span><span>l</span><span>l</span>
+    <span>Y</span><span>o</span><span>u</span>
+    <span>B</span><span>e</span>
+    <span>M</span><span>y</span>
+    <span>V</span><span>a</span><span>l</span><span>e</span><span>n</span><span>t</span><span>i</span><span>n</span><span>e</span>
+    <span>💖</span>
+  </h1>
 
   <button id="yes" onclick="yesClick()">Yes 😍</button>
   <button id="no">No 🙃</button>
@@ -78,23 +131,60 @@
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
     const body = document.body;
+    const headingSpans = document.querySelectorAll("#mainHeading span");
 
-    // YES click: hearts + sound + message
+    // Rainbow color animation for heading letters
+    const colors = ["#FF4D6D", "#FFB347", "#FFFC00", "#4DFF4D", "#4DD2FF", "#B84DFF"];
+    setInterval(() => {
+      headingSpans.forEach(span => {
+        span.style.color = colors[Math.floor(Math.random() * colors.length)];
+      });
+    }, 500);
+
+    // Floating hearts
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.top = window.innerHeight + "px";
+      heart.style.fontSize = (10 + Math.random() * 30) + "px";
+      body.appendChild(heart);
+      setTimeout(() => heart.remove(), 2000);
+    }
+
+    // Confetti
+    function createConfetti() {
+      const confetti = document.createElement("div");
+      confetti.className = "confetti";
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 3000);
+    }
+
+    function startConfetti() {
+      setInterval(createConfetti, 200);
+    }
+
+    // YES button click
     function yesClick() {
       const audio = document.getElementById("popSound");
       audio.play();
 
-      document.querySelector("h1").textContent = "Yayyy! 💕🥰 Febi said YES! 💘";
-      for (let i = 0; i < 30; i++) {
-        createHeart();
-      }
+      document.querySelector("#mainHeading").textContent = "Yayyy! 💕🥰 Febi said YES! 💘";
+
+      body.classList.add("celebration"); // Background animation
+
+      setInterval(createHeart, 500); // Continuous hearts
+      startConfetti(); // Start confetti
     }
 
-    // Funny NO messages & dodging
+    // NO button dodging and funny messages
     noBtn.addEventListener("mousemove", () => {
       moveNo();
       const msgIndex = Math.floor(Math.random() * funnyMessages.length);
-      document.querySelector("h1").textContent = funnyMessages[msgIndex];
+      document.querySelector("#mainHeading").textContent = funnyMessages[msgIndex];
     });
 
     function moveNo() {
@@ -102,7 +192,6 @@
       let x, y;
       const padding = 20;
 
-      // Keep it inside the screen
       do {
         x = Math.random() * (window.innerWidth - btnRect.width - padding);
         y = Math.random() * (window.innerHeight - btnRect.height - padding);
@@ -115,22 +204,8 @@
       noBtn.style.top = y + "px";
     }
 
-    // Floating hearts
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "❤️";
-      heart.style.left = Math.random() * window.innerWidth + "px";
-      heart.style.top = window.innerHeight + "px";
-      heart.style.fontSize = (10 + Math.random() * 30) + "px";
-      body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 2000);
-    }
-
-    // Initialize NO button somewhere random
+    // Initialize NO button position
     moveNo();
   </script>
-
 </body>
 </html>
