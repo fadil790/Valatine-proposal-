@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Febi 💘</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #ffe6ea;
+      text-align: center;
+      overflow: hidden;
+      cursor: default;
+    }
+    h1 {
+      color: #e6005c;
+      font-size: 40px;
+      margin-bottom: 40px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    #yes {
+      background: #ff4d6d;
+      color: white;
+      z-index: 1;
+    }
+    #no {
+      background: #ccc;
+      position: absolute;
+      z-index: 2;
+    }
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 24px;
+      animation: floatUp 2s linear forwards;
+      pointer-events: none;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-200px) scale(1.5); }
+    }
+  </style>
+</head>
+<body>
 
+  <h1>Febi, will you be my Valentine? 💖</h1>
+
+  <button id="yes" onclick="yesClick()">Yes 😍</button>
+  <button id="no">No 🙃</button>
+
+  <audio id="popSound">
+    <source src="https://www.soundjay.com/button/sounds/button-16.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const funnyMessages = [
+      "Come on Febi, don’t be shy! 😜",
+      "Are you serious? Try again 😏",
+      "Oops, the No button is shy 😆",
+      "Febi, don’t make me cry 😭",
+      "Nooope! Not today Febi 😝",
+      "Try harder, Febi 😎"
+    ];
+
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
+    const body = document.body;
+
+    // YES click: hearts + sound + message
+    function yesClick() {
+      const audio = document.getElementById("popSound");
+      audio.play();
+
+      document.querySelector("h1").textContent = "Yayyy! 💕🥰 Febi said YES! 💘";
+      for (let i = 0; i < 30; i++) {
+        createHeart();
+      }
+    }
+
+    // Funny NO messages & dodging
+    noBtn.addEventListener("mousemove", () => {
+      moveNo();
+      const msgIndex = Math.floor(Math.random() * funnyMessages.length);
+      document.querySelector("h1").textContent = funnyMessages[msgIndex];
+    });
+
+    function moveNo() {
+      const btnRect = noBtn.getBoundingClientRect();
+      let x, y;
+      const padding = 20;
+
+      // Keep it inside the screen
+      do {
+        x = Math.random() * (window.innerWidth - btnRect.width - padding);
+        y = Math.random() * (window.innerHeight - btnRect.height - padding);
+      } while (
+        x > yesBtn.offsetLeft - 50 && x < yesBtn.offsetLeft + yesBtn.offsetWidth + 50 &&
+        y > yesBtn.offsetTop - 50 && y < yesBtn.offsetTop + yesBtn.offsetHeight + 50
+      );
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    // Floating hearts
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "❤️";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.top = window.innerHeight + "px";
+      heart.style.fontSize = (10 + Math.random() * 30) + "px";
+      body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 2000);
+    }
+
+    // Initialize NO button somewhere random
+    moveNo();
+  </script>
+
+</body>
+</html>
