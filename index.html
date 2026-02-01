@@ -1,1 +1,173 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Febi 💖 Valentine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin:0;
+  font-family:Arial, sans-serif;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#ff4e50,#f9d423);
+  color:white;
+  overflow:hidden;
+  text-align:center;
+}
+.card {
+  background:rgba(255,255,255,0.2);
+  padding:30px;
+  border-radius:20px;
+  max-width:360px;
+  backdrop-filter:blur(10px);
+  z-index:2;
+  position:relative;
+}
+.glow {
+  font-size:32px;
+  font-weight:bold;
+  animation:glow 2s infinite alternate;
+}
+@keyframes glow {
+  from {text-shadow:0 0 5px #fff,0 0 10px #ff4d6d;}
+  to   {text-shadow:0 0 15px #fff,0 0 30px #ff1744;}
+}
+button {
+  background:#ff1744;
+  border:none;
+  padding:12px 22px;
+  margin:10px;
+  border-radius:25px;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  position:relative;
+}
+#noBtn {position:absolute;}
+.heart {
+  position:absolute;
+  bottom:-20px;
+  font-size:20px;
+  animation:float 6s linear infinite;
+  opacity:0.7;
+}
+@keyframes float {
+  0% {transform:translateY(0);}
+  100% {transform:translateY(-100vh);}
+}
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: 0.8;
+  pointer-events: none;
+  border-radius:50%;
+}
+#valentineImage {
+  display:none;
+  width:200px;
+  margin-top:15px;
+  border-radius:15px;
+  box-shadow:0 0 15px #fff;
+}
+</style>
+</head>
+
+<body onclick="startMusic()">
+
+<audio id="music" loop>
+  <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Komiku/Its_time_for_adventure/Komiku_-_07_-_Battle_of_Pogs.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <h1 class="glow">Hey Febi ❤️</h1>
+  <p><span class="glow">Febi</span>, ente life-il oru special aaya nee…<br>
+     Will you be my Valentine? 💝</p>
+
+  <button onclick="yesClick()">Yes 😍</button>
+  <button id="noBtn" onclick="noClick()">No 🙈</button>
+
+  <p id="result"></p>
+  <img id="valentineImage" src="https://i.ibb.co/5xZ0b4c/valentine-heart.png" alt="Valentine Heart">
+  <button id="shareBtn" style="display:none;" onclick="share()">Share 💌</button>
+</div>
+
+<script>
+let noCount = 0;
+const noBtn = document.getElementById("noBtn");
+const music = document.getElementById("music");
+
+function startMusic() { music.play(); }
+
+function yesClick() {
+  const result = document.getElementById("result");
+  result.innerText = "Febi, ninte YES ente jeevithathile best moment aanu 💕🌹\nHappy Valentine’s Day!";
+  document.getElementById("shareBtn").style.display = "inline-block";
+
+  // AFTER 2 seconds: glowing message + hearts + confetti
+  setTimeout(() => {
+    const surprise = document.createElement("div");
+    surprise.innerHTML = "<h2 class='glow'>Love you so much Febi! 😍💖</h2>";
+    document.querySelector(".card").appendChild(surprise);
+
+    for(let i=0;i<30;i++) createHeart();
+    for(let i=0;i<50;i++) createConfetti();
+  },2000);
+
+  // AFTER 4 seconds: show Valentine image
+  setTimeout(() => {
+    document.getElementById("valentineImage").style.display = "block";
+    for(let i=0;i<20;i++) createHeart();
+  },4000);
+}
+
+function noClick() {
+  noCount++;
+  const messages = ["Febi sure alle? 🥺","Onnu think cheyyu Febi ❤️","Ente heart break aavum 😢","Pleaseeee Febi 💔","Okay… escape illa 😏💘"];
+  document.getElementById("result").innerText = messages[Math.min(noCount-1,messages.length-1)];
+
+  // Move NO button randomly
+  const x = Math.random()*(window.innerWidth-100);
+  const y = Math.random()*(window.innerHeight-50);
+  noBtn.style.left = x+"px";
+  noBtn.style.top = y+"px";
+}
+
+function share() {
+  const text = "Febi just made my Valentine’s Day special 💖🥰";
+  const url = window.location.href;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text+" "+url)}`);
+}
+
+// Hearts animation
+setInterval(createHeart,500);
+function createHeart(){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.innerText="❤️";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.fontSize=Math.random()*20+15+"px";
+  document.body.appendChild(heart);
+  setTimeout(()=>heart.remove(),6000);
+}
+
+// Confetti function
+function createConfetti(){
+  const conf=document.createElement("div");
+  conf.className="confetti";
+  conf.style.background=['#ff0','#f0f','#0ff','#fff','#ff1744'][Math.floor(Math.random()*5)];
+  conf.style.left=Math.random()*100+"vw";
+  conf.style.top=Math.random()*100+"vh";
+  conf.style.width=conf.style.height=Math.random()*8+5+"px";
+  document.body.appendChild(conf);
+  setTimeout(()=>conf.remove(),4000);
+}
+</script>
+
+</body>
+</html>
